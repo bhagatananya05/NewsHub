@@ -15,7 +15,7 @@ const newsdetails = document.getElementById("newsdetails");
 var newsDataArr = [];
 
 // apis
-const API_KEY = "509a96ea867243d7828a13daffc090e3";
+const API_KEY = "11667982be9a4730b94b258153575182";
 const HEADLINES_NEWS =
   "https://newsapi.org/v2/top-headlines?country=in&apiKey=";
 const GENERAL_NEWS =
