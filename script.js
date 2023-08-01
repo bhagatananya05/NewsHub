@@ -11,212 +11,40 @@ const newsQuery = document.getElementById("newsQuery");
 const newsType = document.getElementById("newsType");
 const newsdetails = document.getElementById("newsdetails");
 
-// Array
-var newsDataArr = [];
-
-// apis
-const API_KEY = '11667982be9a4730b94b258153575182';
-const HEADLINES_NEWS =
-  "https://newsapi.org/v2/top-headlines?country=in&apiKey=";
-const GENERAL_NEWS =
-  "https://newsapi.org/v2/top-headlines?country=in&category=general&apiKey=";
-const BUSINESS_NEWS =
-  "https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=";
-const SPORTS_NEWS =
-  "https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=";
-const ENTERTAINMENT_NEWS =
-  "https://newsapi.org/v2/top-headlines?country=in&category=entertainment&apiKey=";
-const SCIENCE_NEWS =
-  "https://newsapi.org/v2/top-headlines?country=in&category=science&pageSize=8&apiKey=";
-const TECHNOLOGY_NEWS =
-  "https://newsapi.org/v2/top-headlines?country=in&category=technology&pageSize=8&apiKey=";
+// APIs
+const API_KEY = '0cf3ed8422cd4005a4bbf5b0d86254cc';
+const HEADLINES_NEWS = "https://newsapi.org/v2/top-headlines?country=in&apiKey=";
 const SEARCH_NEWS = "https://newsapi.org/v2/everything?q=";
 
-window.onload = function () {
-  newsType.innerHTML = "<h3><b>TOP HEADLINES</b></h3>";
-  fetchHeadlines();
-};
+// Helper function to fetch news based on category or search query
+const fetchNews = async (category = "", query = "") => {
+  const endpoint = query
+    ? `${SEARCH_NEWS}${encodeURIComponent(query)}&apiKey=${API_KEY}`
+    : `${HEADLINES_NEWS}${category ? `&category=${category}` : ""}&apiKey=${API_KEY}`;
 
-generalBtn.addEventListener("click", function () {
-  newsType.innerHTML = "<h3><b>GENERAL NEWS</b></h3>";
-  fetchGeneralNews();
-});
-
-businessBtn.addEventListener("click", function () {
-  newsType.innerHTML = "<h3><b>BUSINESS</b></h3>";
-  fetchBusinessNews();
-});
-
-sportsBtn.addEventListener("click", function () {
-  newsType.innerHTML = "<h3><b>SPORTS</b></h3>";
-  fetchSportsNews();
-});
-
-entertainmentBtn.addEventListener("click", function () {
-  newsType.innerHTML = "<h3><b>ENTERTAINMENT</b></h3>";
-  fetchEntertainmentNews();
-});
-
-scienceBtn.addEventListener("click", function () {
-  newsType.innerHTML = "<h3><b>SCIENCE</b></h3>";
-  fetchScienceNews();
-});
-
-technologyBtn.addEventListener("click", function () {
-  newsType.innerHTML = "<h3><b>TECHNOLOGY</b></h3>";
-  fetchTechnologyNews();
-});
-
-searchBtn.addEventListener("click", function () {
-  newsType.innerHTML =
-    "<h4><span class='text-dark'>Showing results for : </span><b>" +
-    newsQuery.value +
-    "</b></h4>";
-  fetchQueryNews();
-});
-
-const fetchHeadlines = async () => {
-  const response = await fetch(HEADLINES_NEWS + API_KEY);
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    newsDataArr = myJson.articles;
-  } else {
-    // handle errors
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
+  try {
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      throw new Error(`${response.status} - ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.articles;
+  } catch (error) {
+    console.error("Error fetching news:", error.message);
+    return [];
   }
-
-  displayNews();
 };
 
-const fetchGeneralNews = async () => {
-  const response = await fetch(GENERAL_NEWS + API_KEY);
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    newsDataArr = myJson.articles;
-  } else {
-    // handle errors
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
-  }
-
-  displayNews();
-};
-
-const fetchBusinessNews = async () => {
-  const response = await fetch(BUSINESS_NEWS + API_KEY);
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    newsDataArr = myJson.articles;
-  } else {
-    // handle errors
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
-  }
-
-  displayNews();
-};
-
-const fetchEntertainmentNews = async () => {
-  const response = await fetch(ENTERTAINMENT_NEWS + API_KEY);
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    console.log(myJson);
-    newsDataArr = myJson.articles;
-  } else {
-    // handle errors
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
-  }
-
-  displayNews();
-};
-
-const fetchSportsNews = async () => {
-  const response = await fetch(SPORTS_NEWS + API_KEY);
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    newsDataArr = myJson.articles;
-  } else {
-    // handle errors
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
-  }
-
-  displayNews();
-};
-
-const fetchScienceNews = async () => {
-  const response = await fetch(SCIENCE_NEWS + API_KEY);
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    newsDataArr = myJson.articles;
-  } else {
-    // handle errors
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
-  }
-
-  displayNews();
-};
-
-const fetchTechnologyNews = async () => {
-  const response = await fetch(TECHNOLOGY_NEWS + API_KEY);
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    newsDataArr = myJson.articles;
-  } else {
-    // handle errors
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
-  }
-
-  displayNews();
-};
-
-const fetchQueryNews = async () => {
-  if (newsQuery.value == null) return;
-
-  const response = await fetch(
-    SEARCH_NEWS + encodeURIComponent(newsQuery.value) + "&apiKey=" + API_KEY
-  );
-  newsDataArr = [];
-  if (response.status >= 200 && response.status < 300) {
-    const myJson = await response.json();
-    newsDataArr = myJson.articles;
-  } else {
-    //error handle
-    console.log(response.status, response.statusText);
-    newsdetails.innerHTML = "<h5>No data found.</h5>";
-    return;
-  }
-
-  displayNews();
-};
-
-function displayNews() {
+// Helper function to display news articles
+const displayNews = (articles) => {
   newsdetails.innerHTML = "";
 
-  // if(newsDataArr.length == 0) {
-  //     newsdetails.innerHTML = "<h5>No data found.</h5>"
-  //     return;
-  // }
+  if (articles.length === 0) {
+    newsdetails.innerHTML = "<h5>No data found.</h5>";
+    return;
+  }
 
-  newsDataArr.forEach((news) => {
+  articles.forEach((news) => {
     var date = news.publishedAt.split("T");
 
     var col = document.createElement("div");
@@ -240,9 +68,9 @@ function displayNews() {
     dateHeading.className = "text-primary";
     dateHeading.innerHTML = date[0];
 
-    var discription = document.createElement("p");
-    discription.className = "text-muted";
-    discription.innerHTML = news.description;
+    var description = document.createElement("p");
+    description.className = "text-muted";
+    description.innerHTML = news.description;
 
     var link = document.createElement("a");
     link.className = "btn btn-dark btn-outline-warning";
@@ -252,7 +80,7 @@ function displayNews() {
 
     cardBody.appendChild(newsHeading);
     cardBody.appendChild(dateHeading);
-    cardBody.appendChild(discription);
+    cardBody.appendChild(description);
     cardBody.appendChild(link);
 
     card.appendChild(image);
@@ -262,4 +90,24 @@ function displayNews() {
 
     newsdetails.appendChild(col);
   });
-}
+};
+
+// Event handler for category buttons and search button
+const handleCategoryButtonClick = async (event) => {
+  const category = event.target.id;
+  const query = newsQuery.value;
+
+  newsType.innerHTML = `<h3><b>${query ? `Showing results for: ${query}` : `${category.toUpperCase()} NEWS`}</b></h3>`;
+
+  const articles = await fetchNews(category, query);
+  displayNews(articles);
+};
+
+// Attach event listeners to buttons
+generalBtn.addEventListener("click", handleCategoryButtonClick);
+businessBtn.addEventListener("click", handleCategoryButtonClick);
+sportsBtn.addEventListener("click", handleCategoryButtonClick);
+entertainmentBtn.addEventListener("click", handleCategoryButtonClick);
+scienceBtn.addEventListener("click", handleCategoryButtonClick);
+technologyBtn.addEventListener("click", handleCategoryButtonClick);
+searchBtn.addEventListener("click", handleCategoryButtonClick);
