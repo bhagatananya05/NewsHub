@@ -12,9 +12,11 @@ const newsType = document.getElementById("newsType");
 const newsdetails = document.getElementById("newsdetails");
 
 // APIs
-const API_KEY = '0cf3ed8422cd4005a4bbf5b0d86254cc';
-const HEADLINES_NEWS = "https://newsapi.org/v2/top-headlines?country=in&apiKey=";
+const API_KEY = 'fdb5ae13d8a54ee786fb310b600f9cd9';
+const HEADLINES_NEWS = "https://newsapi.org/v2/top-headlines?country=in";
 const SEARCH_NEWS = "https://newsapi.org/v2/everything?q=";
+
+
 
 // Helper function to fetch news based on category or search query
 const fetchNews = async (category = "", query = "") => {
@@ -102,6 +104,19 @@ const handleCategoryButtonClick = async (event) => {
   const articles = await fetchNews(category, query);
   displayNews(articles);
 };
+
+//display top-headlines on loading
+document.addEventListener("DOMContentLoaded", async function () {
+  // Function to fetch top headlines
+  async function fetchTopHeadlines() {
+    const articles = await fetchNews(); // No category or query specified for top headlines
+    return articles;
+  }
+
+  // Fetch top headlines and display them
+  const topHeadlines = await fetchTopHeadlines();
+  displayNews(topHeadlines);
+});
 
 // Attach event listeners to buttons
 generalBtn.addEventListener("click", handleCategoryButtonClick);
